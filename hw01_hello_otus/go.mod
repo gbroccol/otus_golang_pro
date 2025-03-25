@@ -1,4 +1,4 @@
-module github.com/gbroccol/hw01_hello_otus
+module github.com/gbroccol/otus_golang_pro/hw01_hello_otus
 
 go 1.22
 
