@@ -54,6 +54,11 @@ jobs:
         if: env.BRANCH == 'hw10_program_optimization'
         working-directory: ${{ env.BRANCH }}
 
+      - name: Make test.sh executable
+        run: chmod +x test.sh
+        if: contains('hw01_hello_otus hw07_file_copying hw08_envdir_tool hw11_telnet_client', env.BRANCH)
+        working-directory: ${{ env.BRANCH }}
+
       - name: Bash tests
         shell: bash
         run: ./test.sh
