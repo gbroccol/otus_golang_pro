@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	//nolint:depguard
 	"github.com/agrison/go-commons-lang/stringUtils"
 )
 

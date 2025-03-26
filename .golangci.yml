@@ -4,6 +4,11 @@ run:
     - bench
     - !bench
 
+linters-settings:
+  funlen:
+    lines: 150
+    statements: 80
+
 issues:
   exclude-rules:
     - path: _test\.go
@@ -60,12 +65,3 @@ linters:
     - unparam
     - unused
     - whitespace
-
-linters-settings:
-  funlen:
-    lines: 150
-    statements: 80
-  depguard:
-    lists:
-      allow:
-        - "github.com/agrison/go-commons-lang/stringUtils"
