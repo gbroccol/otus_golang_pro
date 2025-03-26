@@ -2,4 +2,4 @@ module github.com/gbroccol/otus_golang_pro/hw01_hello_otus
 
 go 1.22
 
-require github.com/agrison/go-commons-lang v0.0.0-20240106075236-2e001e6401ef
+require golang.org/x/example/hello v0.0.0-20241216154601-40afcb705d05

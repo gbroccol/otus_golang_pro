@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 
-	//nolint:depguard
-	"github.com/agrison/go-commons-lang/stringUtils"
+	"golang.org/x/example/hello/reverse"
 )
 
 func main() {
-	fmt.Println(stringUtils.Reverse("Hello, OTUS!"))
+	fmt.Println(reverse.String("Hello, OTUS!"))
 }
