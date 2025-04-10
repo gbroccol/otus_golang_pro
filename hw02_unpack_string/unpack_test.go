@@ -1,4 +1,4 @@
-package unpack
+package hw02unpackstring
 
 import (
 	"errors"
