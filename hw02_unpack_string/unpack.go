@@ -10,10 +10,11 @@ var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(str string) (string, error) {
 	var result strings.Builder
+	runes := []rune(str) // Преобразуем строку в слайс рун для корректной обработки Unicode
 	i := 0
 
-	for i < len(str) {
-		letter := str[i]
+	for i < len(runes) {
+		letter := runes[i]
 
 		if unicode.IsDigit(rune(letter)) {
 			return "", ErrInvalidString
@@ -21,7 +22,7 @@ func Unpack(str string) (string, error) {
 
 		if letter == 92 && i+1 < len(str) {
 			i++
-			letter = str[i]
+			letter = runes[i]
 		} else if letter == 92 {
 			return "", ErrInvalidString
 		}
@@ -30,14 +31,14 @@ func Unpack(str string) (string, error) {
 			digit := rune(str[i+1])
 			if unicode.IsDigit(digit) {
 				for amount := int(digit - '0'); amount > 0; amount-- {
-					result.WriteByte(letter)
+					result.WriteRune(letter)
 				}
 				i++
 			} else {
-				result.WriteByte(letter)
+				result.WriteRune(letter)
 			}
 		} else {
-			result.WriteByte(letter)
+			result.WriteRune(letter)
 		}
 		i++
 	}
