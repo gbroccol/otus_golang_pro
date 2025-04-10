@@ -1,4 +1,4 @@
-package hw02unpackstring
+package unpack
 
 import (
 	"errors"
@@ -17,6 +17,7 @@ func TestUnpack(t *testing.T) {
 		{input: "абвг", expected: "абвг"},
 		{input: "", expected: ""},
 		{input: "aaa0b", expected: "aab"},
+		{input: "a0a0a0b", expected: "b"},
 		{input: `qwe\4\5`, expected: `qwe45`},
 		{input: `qwe\45`, expected: `qwe44444`},
 		{input: `qwe\\5`, expected: `qwe\\\\\`},
