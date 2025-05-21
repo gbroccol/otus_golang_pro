@@ -6,7 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require" //nolint:depguard
 )
 
 func TestCache(t *testing.T) {
@@ -48,11 +48,11 @@ func TestCache(t *testing.T) {
 		require.False(t, ok)
 		require.Nil(t, val)
 
-		wasInCache = c.Set("c", 300)
-		wasInCache = c.Set("d", 300)
-		wasInCache = c.Set("e", 300)
-		wasInCache = c.Set("f", 300)
-		wasInCache = c.Set("g", 300)
+		c.Set("c", 300)
+		c.Set("d", 300)
+		c.Set("e", 300)
+		c.Set("f", 300)
+		c.Set("g", 300)
 
 		val, ok = c.Get("aaa")
 		require.False(t, ok)
@@ -84,7 +84,7 @@ func TestCache(t *testing.T) {
 	})
 }
 
-func TestCacheMultithreading(t *testing.T) {
+func TestCacheMultithreading(_ *testing.T) {
 	c := NewCache(10)
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
