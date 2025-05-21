@@ -16,7 +16,7 @@ func Unpack(str string) (string, error) {
 	for i < len(runes) {
 		letter := runes[i]
 
-		if unicode.IsDigit(rune(letter)) {
+		if unicode.IsDigit(letter) {
 			return "", ErrInvalidString
 		}
 
