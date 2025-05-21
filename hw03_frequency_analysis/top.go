@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Определяем структуру для max heap
+// Определяем структуру для max heap.
 type MaxHeap []Pair
 
 func (h MaxHeap) Len() int { return len(h) }
@@ -33,22 +33,25 @@ type Pair struct {
 }
 
 func Top10(text string) []string {
-
 	words := strings.Fields(text)
 	frequencyMap := map[string]int{}
-
 	for _, word := range words {
-		frequencyMap[word] += 1
+		frequencyMap[word]++
 	}
-
-	//return getTopUsingSlice(frequencyMap)
 	return getTopUsingHeap(frequencyMap)
 }
 
+func Top10V2(text string) []string {
+	words := strings.Fields(text)
+	frequencyMap := map[string]int{}
+	for _, word := range words {
+		frequencyMap[word]++
+	}
+	return getTopUsingSlice(frequencyMap)
+}
+
 func getTopUsingSlice(frequencyMap map[string]int) []string {
-
-	var pairs []Pair
-
+	pairs := make([]Pair, 0, len(frequencyMap))
 	for k, v := range frequencyMap {
 		pairs = append(pairs, Pair{Key: k, Value: v})
 	}
@@ -71,7 +74,6 @@ func getTopUsingSlice(frequencyMap map[string]int) []string {
 }
 
 func getTopUsingHeap(frequencyMap map[string]int) []string {
-
 	h := &MaxHeap{}
 	heap.Init(h)
 
@@ -83,6 +85,5 @@ func getTopUsingHeap(frequencyMap map[string]int) []string {
 	for i := 0; i < 10 && h.Len() > 0; i++ {
 		top10Keys = append(top10Keys, heap.Pop(h).(Pair).Key)
 	}
-
 	return top10Keys
 }
