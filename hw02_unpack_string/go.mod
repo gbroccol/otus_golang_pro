@@ -1,8 +1,6 @@
 module github.com/gbroccol/hw02_unpack_string
 
-go 1.23.0
-
-toolchain go1.23.8
+go 1.24.2
 
 require github.com/stretchr/testify v1.7.0
 
