@@ -1,9 +1,9 @@
 package hw02unpackstring
 
 import (
-	"errors"  //nolint:depguard
-	"strings" //nolint:depguard
-	"unicode" //nolint:depguard
+	"errors"
+	"strings"
+	"unicode"
 )
 
 var ErrInvalidString = errors.New("invalid string")
