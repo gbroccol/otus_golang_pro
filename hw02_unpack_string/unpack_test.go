@@ -1,10 +1,10 @@
 package hw02unpackstring
 
 import (
-	"errors"
-	"testing"
+	"errors"  //nolint:depguard
+	"testing" //nolint:depguard
 
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require" //nolint:depguard
 )
 
 func TestUnpack(t *testing.T) {
