@@ -35,3 +35,21 @@
 - `os.OpenFile`, `os.Create`, `os.FileMode`
 - `io.CopyN`
 - `os.CreateTemp`
+
+
+### Запустить программу
+
+#### Собрать программу
+```bash
+go build -o copier
+```
+
+#### Запустить с аргументами
+- Пример копирования целиком:
+```bash
+./copier -from testdata/input.txt -to output.txt
+```
+- С отступом и ограничением:
+```bash
+./copier -from testdata/input.txt -to output.txt -offset 7 -limit 10
+```
