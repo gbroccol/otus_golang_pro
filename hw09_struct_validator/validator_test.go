@@ -2,6 +2,7 @@ package hw09structvalidator
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -38,23 +39,96 @@ type (
 
 func TestValidate(t *testing.T) {
 	tests := []struct {
+		name        string
 		in          interface{}
 		expectedErr error
 	}{
 		{
-			// Place your code here.
+			name: "valid user",
+			in: User{
+				ID:     "12345678-1234-5678-1234-567812345678",
+				Age:    25,
+				Email:  "test@example.com",
+				Role:   "admin",
+				Phones: []string{"12345678901", "09876543210"},
+			},
+			expectedErr: nil,
 		},
-		// ...
-		// Place your code here.
+		{
+			name: "invalid age and email",
+			in: User{
+				ID:     "123",
+				Age:    17,
+				Email:  "not-an-email",
+				Role:   "guest",
+				Phones: []string{"12345", "0987654321"},
+			},
+			expectedErr: ValidationErrors{
+				{Field: "ID", Err: errValidationLen},
+				{Field: "Age", Err: errValidationMin},
+				{Field: "Email", Err: errValidationRegexp},
+				{Field: "Role", Err: errValidationIn},
+			},
+		},
+		{
+			name: "valid app version",
+			in: App{
+				Version: "1.0.0",
+			},
+			expectedErr: nil,
+		},
+		{
+			name:        "non-struct input",
+			in:          "string",
+			expectedErr: errNotStruct,
+		},
+		{
+			name: "valid response",
+			in: Response{
+				Code: 200,
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "invalid response code",
+			in: Response{
+				Code: 403,
+			},
+			expectedErr: ValidationErrors{
+				{Field: "Code", Err: errValidationIn},
+			},
+		},
 	}
 
 	for i, tt := range tests {
-		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-			tt := tt
+		t.Run(fmt.Sprintf("case %d: %s", i, tt.name), func(t *testing.T) {
 			t.Parallel()
+			err := Validate(tt.in)
 
-			// Place your code here.
-			_ = tt
+			if tt.expectedErr == nil {
+				if err != nil {
+					t.Errorf("unexpected error: %v", err)
+				}
+				return
+			}
+
+			var expectedValidationErrs ValidationErrors
+			if errors.As(tt.expectedErr, &expectedValidationErrs) {
+				var actualValidationErrs ValidationErrors
+				if !errors.As(err, &actualValidationErrs) {
+					t.Errorf("expected ValidationErrors, got %T", err)
+					return
+				}
+
+				for i, e := range expectedValidationErrs {
+					if actualValidationErrs[i].Field != e.Field || !errors.Is(actualValidationErrs[i].Err, e.Err) {
+						t.Errorf("error mismatch at index %d: expected {Field: %q, Err: %v}, got {Field: %q, Err: %v}",
+							i, e.Field, e.Err, actualValidationErrs[i].Field, actualValidationErrs[i].Err)
+					}
+				}
+			} else if tt.expectedErr != nil && !errors.Is(err, tt.expectedErr) {
+				t.Errorf("expected error %v, got %v", tt.expectedErr, err)
+			}
 		})
 	}
 }
