@@ -65,7 +65,6 @@ func getBytesToCopy(offset, limit, fileSize int64) int64 {
 }
 
 func copyInternal(bytesToCopy int64, fromFile, toFile os.File) error {
-
 	bufSize := 32 * 1024 // 32 KB — стандартный буфер
 	buf := make([]byte, bufSize)
 	var copied int64
