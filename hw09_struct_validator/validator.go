@@ -96,11 +96,9 @@ func validateField(value reflect.Value, field reflect.StructField, validators []
 			}
 		default:
 			errs = append(errs, ValidationError{Field: field.Name, Err: errUnsupportedType})
-			//return errUnsupportedType, errs
 		}
 	default:
 		errs = append(errs, ValidationError{Field: field.Name, Err: errUnsupportedType})
-		//return errUnsupportedType, errs
 	}
 	return errs
 }
