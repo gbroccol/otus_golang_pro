@@ -53,38 +53,9 @@ func Validate(v interface{}) error {
 		}
 
 		validators := strings.Split(tag, "|")
-		switch value.Kind() {
-		case reflect.String:
-			err := validateString(field.Name, value.String(), validators)
-			if err != nil {
-				validationErrors = append(validationErrors, err...)
-			}
-		case reflect.Int:
-			err := validateInt(field.Name, int(value.Int()), validators)
-			if err != nil {
-				validationErrors = append(validationErrors, err...)
-			}
-		case reflect.Slice:
-			switch value.Type().Elem().Kind() {
-			case reflect.String:
-				for i := 0; i < value.Len(); i++ {
-					err := validateString(field.Name, value.Index(i).String(), validators)
-					if err != nil {
-						validationErrors = append(validationErrors, err...)
-					}
-				}
-			case reflect.Int:
-				for i := 0; i < value.Len(); i++ {
-					err := validateInt(field.Name, int(value.Index(i).Int()), validators)
-					if err != nil {
-						validationErrors = append(validationErrors, err...)
-					}
-				}
-			default:
-				return errUnsupportedType
-			}
-		default:
-			return errUnsupportedType
+		errs := validateField(value, field, validators)
+		if errs != nil {
+			validationErrors = append(validationErrors, errs...)
 		}
 	}
 
@@ -92,6 +63,46 @@ func Validate(v interface{}) error {
 		return validationErrors
 	}
 	return nil
+}
+
+func validateField(value reflect.Value, field reflect.StructField, validators []string) ValidationErrors {
+	var errs ValidationErrors
+	switch value.Kind() {
+	case reflect.String:
+		err := validateString(field.Name, value.String(), validators)
+		if err != nil {
+			errs = append(errs, err...)
+		}
+	case reflect.Int:
+		err := validateInt(field.Name, int(value.Int()), validators)
+		if err != nil {
+			errs = append(errs, err...)
+		}
+	case reflect.Slice:
+		switch value.Type().Elem().Kind() {
+		case reflect.String:
+			for i := 0; i < value.Len(); i++ {
+				err := validateString(field.Name, value.Index(i).String(), validators)
+				if err != nil {
+					errs = append(errs, err...)
+				}
+			}
+		case reflect.Int:
+			for i := 0; i < value.Len(); i++ {
+				err := validateInt(field.Name, int(value.Index(i).Int()), validators)
+				if err != nil {
+					errs = append(errs, err...)
+				}
+			}
+		default:
+			errs = append(errs, ValidationError{Field: field.Name, Err: errUnsupportedType})
+			//return errUnsupportedType, errs
+		}
+	default:
+		errs = append(errs, ValidationError{Field: field.Name, Err: errUnsupportedType})
+		//return errUnsupportedType, errs
+	}
+	return errs
 }
 
 func validateString(field, value string, validators []string) ValidationErrors {
