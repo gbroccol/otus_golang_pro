@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -116,7 +117,7 @@ func TestCopy(t *testing.T) {
 
 			err := Copy(tt.args.from, tmpFile, tt.args.offset, tt.args.limit)
 
-			if err != tt.expectError {
+			if !errors.Is(err, tt.expectError) {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
 

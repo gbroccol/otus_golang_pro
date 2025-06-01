@@ -87,7 +87,7 @@ func copyInternal(bytesToCopy int64, fromFile, toFile os.File) error {
 			fmt.Printf("\rCopying... %d%%", copied*100/bytesToCopy)
 		}
 		if readErr != nil {
-			if readErr == io.EOF {
+			if errors.Is(readErr, io.EOF) {
 				break
 			}
 			return fmt.Errorf("read error: %w", readErr)
