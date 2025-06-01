@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -40,11 +41,11 @@ func TestCopy(t *testing.T) {
 			expectedResult: "testdata/out_offset0_limit10.txt",
 		},
 		{
-			testName: "copy-with-offset-0-limit-100",
+			testName: "copy-with-offset-0-limit-1000",
 			args: args{
 				from:   "testdata/input.txt",
 				offset: 0,
-				limit:  100,
+				limit:  1000,
 			},
 			expectError:    nil,
 			expectedResult: "testdata/out_offset0_limit1000.txt",
@@ -110,14 +111,12 @@ func TestCopy(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			//tmpFile := filepath.Join(os.TempDir(), "test-"+tt.testName+".out")
-			//defer os.Remove(tmpFile) // чистим файл после теста
-
-			tmpFile := "test-" + tt.testName + ".txt"
+			tmpFile := filepath.Join(os.TempDir(), "test-"+tt.testName+".out")
+			defer os.Remove(tmpFile)
 
 			err := Copy(tt.args.from, tmpFile, tt.args.offset, tt.args.limit)
 
-			if err != tt.expectError { // todo !errors.Is(err, tt.expectError)
+			if err != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
 
