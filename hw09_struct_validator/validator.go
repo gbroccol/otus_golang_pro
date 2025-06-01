@@ -67,6 +67,7 @@ func Validate(v interface{}) error {
 
 func validateField(value reflect.Value, field reflect.StructField, validators []string) ValidationErrors {
 	var errs ValidationErrors
+	//nolint:exhaustive // intentionally handle only required kinds
 	switch value.Kind() {
 	case reflect.String:
 		err := validateString(field.Name, value.String(), validators)
@@ -79,6 +80,7 @@ func validateField(value reflect.Value, field reflect.StructField, validators []
 			errs = append(errs, err...)
 		}
 	case reflect.Slice:
+		//nolint:exhaustive // intentionally handle only required kinds
 		switch value.Type().Elem().Kind() {
 		case reflect.String:
 			for i := 0; i < value.Len(); i++ {

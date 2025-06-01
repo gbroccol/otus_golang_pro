@@ -112,26 +112,22 @@ func TestValidate(t *testing.T) {
 				return
 			}
 
-			switch expected := tt.expectedErr.(type) {
-			case ValidationErrors:
-				var actual ValidationErrors
-				if !errors.As(err, &actual) {
+			var expectedValidationErrs ValidationErrors
+			if errors.As(tt.expectedErr, &expectedValidationErrs) {
+				var actualValidationErrs ValidationErrors
+				if !errors.As(err, &actualValidationErrs) {
 					t.Errorf("expected ValidationErrors, got %T", err)
 					return
 				}
 
-				for i, e := range expected {
-					if actual[i].Field != e.Field || !errors.Is(actual[i].Err, e.Err) {
+				for i, e := range expectedValidationErrs {
+					if actualValidationErrs[i].Field != e.Field || !errors.Is(actualValidationErrs[i].Err, e.Err) {
 						t.Errorf("error mismatch at index %d: expected {Field: %q, Err: %v}, got {Field: %q, Err: %v}",
-							i, e.Field, e.Err, actual[i].Field, actual[i].Err)
+							i, e.Field, e.Err, actualValidationErrs[i].Field, actualValidationErrs[i].Err)
 					}
 				}
-			case error:
-				if !errors.Is(err, expected) {
-					t.Errorf("expected error %v, got %v", expected, err)
-				}
-			default:
-				t.Errorf("unknown expected error type: %T", expected)
+			} else if tt.expectedErr != nil && !errors.Is(err, tt.expectedErr) {
+				t.Errorf("expected error %v, got %v", tt.expectedErr, err)
 			}
 		})
 	}
